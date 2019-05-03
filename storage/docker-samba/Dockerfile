@@ -1,4 +1,4 @@
-FROM arm64v8/alpine:edge
+FROM alpine
 MAINTAINER Jen McQuade <info@indiewebconsulting.com>
 
 LABEL com.iwc.application="docker-samba" 

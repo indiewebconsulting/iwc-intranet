@@ -1,4 +1,4 @@
-FROM arm64v8/alpine
+FROM alpine
 
 LABEL maintainer="Jen McQuade <info@indiewebconsulting.com>"
 

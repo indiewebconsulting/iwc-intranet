@@ -1,4 +1,4 @@
-FROM arm64v8/debian
+FROM debian:8
 MAINTAINER dnscrypt.io
 
 ENV BUILD_DEPENDENCIES \
@@ -10,7 +10,7 @@ ENV BUILD_DEPENDENCIES \
 
 RUN set -x && \
     apt-get update && \
-    apt-get install -y $BUILD_DEPENDENCIES # --no-install-recommends
+    apt-get install -y $BUILD_DEPENDENCIES --no-install-recommends
 
 ENV LIBSODIUM_VERSION 1.0.12
 ENV LIBSODIUM_SHA256 b8648f1bb3a54b0251cf4ffa4f0d76ded13977d4fa7517d988f4c902dd8e2f95
@@ -75,3 +75,4 @@ CMD /opt/dnscrypt-proxy/sbin/dnscrypt-proxy \
                    --edns-payload-size=$EDNS_PAYLOAD_SIZE \
                    --ephemeral-keys \
                    /opt/dnscrypt-proxy/etc/dnscrypt-proxy.conf
+

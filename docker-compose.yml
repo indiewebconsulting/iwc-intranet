@@ -1,9 +1,9 @@
 version: '3'
 services:
-  adan:
+  adaen:
     env_file:
       - ./.env
-    image: ${DOCKER_ACCT}/adan:prfx-arm64-v${IWC_INTRANET_VERSION}
+    image: ${DOCKER_ACCT}/adaen:prfx-${CPU_TYPE}-v${IWC_INTRANET_VERSION}
     build:
       context: ./dns/docker-php-nginx
     deploy:
@@ -37,7 +37,7 @@ services:
       - ${HTTP_SECONDARY}:8080
     volumes:
       - ./sites:/var/www/html
-        # - ./ops/certs:/etc/letsencrypt/live
+      - ./ops/certs:/etc/letsencrypt/live
       - ./config/nginx/sites-available:/etc/nginx/sites-available
       - ./config/nginx/sites-enabled:/etc/nginx/sites-enabled
       - ./config/nginx/conf.d:/etc/nginx/conf.d
@@ -56,9 +56,9 @@ services:
   dnsmasqd:
     env_file:
       - ./.env
-    image: ${DOCKER_ACCT}/intranet_dnsmasqd:arm64v8-v${IWC_INTRANET_VERSION}
-    #build:
-      #context: ./dns/docker-dnsmasq
+    image: ${DOCKER_ACCT}/intranet_dnsmasqd:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
+    build:
+      context: ./dns/docker-dnsmasq
     deploy:
       mode: replicated
       replicas: 2
@@ -95,9 +95,9 @@ services:
   dnscryptd:
     env_file:
       - ./.env
-    image: ${DOCKER_ACCT}/intranet_dnscrypt-proxy:arm64v8-v${IWC_INTRANET_VERSION}
-    #build:
-      #context: ./dns/docker-dnscrypt
+    image: ${DOCKER_ACCT}/intranet_dnscrypt-proxy:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
+    build:
+      context: ./dns/docker-dnscrypt
     deploy:
       mode: replicated
       replicas: 2
@@ -133,7 +133,7 @@ services:
   smbd:
    env_file:
      - ./.env
-   image: ${DOCKER_ACCT}/intranet_smbd:arm64v8-v${IWC_INTRANET_VERSION}
+   image: ${DOCKER_ACCT}/intranet_smbd:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
    build:
      context: ./storage/docker-samba
    deploy:
@@ -172,7 +172,7 @@ services:
   rsync:
     env_file:
       - ./.env
-    image: ${DOCKER_ACCT}/intranet_rsync:arm64v8-v${IWC_INTRANET_VERSION}
+    image: ${DOCKER_ACCT}/intranet_rsync:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
     container_name: rsync
     build:
       context: ./storage/docker-rsync

@@ -1,4 +1,4 @@
-FROM arm64v8/python:alpine
+FROM python:alpine
 
 ARG CLI_VERSION=1.16.138
 

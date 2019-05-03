@@ -1,4 +1,4 @@
-FROM arm64v8/alpine:edge
+FROM alpine
 LABEL maintainer="dev@jpillora.com"
 # webproc release settings
 ENV WEBPROC_VERSION 0.2.2

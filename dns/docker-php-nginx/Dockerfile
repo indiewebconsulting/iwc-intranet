@@ -1,7 +1,7 @@
 #-------------------------------------
 # v1.0.0 build for IWC Intranet
 #
-# ARM64 DOCKER ALPINE NGINX PHP-FPM RTMP FFMPEG XDEBUG
+#ARM64 DOCKER ALPINE NGINX PHP-FPM RTMP FFMPEG XDEBUG
 # **********************************
 # ADAN : PRFX - Benchmarking build
 # **********************************
@@ -46,7 +46,7 @@
 ##
 # From Debian Stretch as a factory
 ##
-FROM arm64v8/debian:stretch-slim AS stage0
+FROM debian:stretch-slim AS stage0
 
 LABEL maintainer="Jen McQuade <info@indiewebconsulting.com>"
 
@@ -189,14 +189,14 @@ ADD ./conf /etc/nginx/conf.d
 # Build the FFmpeg-build image.
 # This doesn't require any stage0 components, so we're OK to build using Alpine instead of Debian
 ##############################
-FROM arm64v8/alpine as build-ffmpeg
+FROM alpine as build-ffmpeg
 ARG FFMPEG_VERSION
 ARG PREFIX=/usr/local
 ARG MAKEFLAGS="-j4"
 ENV FFMPEG_VERSION 4.1.3
 
 # FFmpeg build dependencies.
-RUN apk add --update --arch arm64 \
+RUN apk add --update \
   build-base \
   freetype-dev \
   lame-dev \
@@ -263,7 +263,7 @@ RUN rm -rf /var/cache/* /build/*
 
 ##########################
 # Build the releasable image.
-FROM arm64v8/php:7.3.4-fpm-alpine as stage1
+FROM php:7.3.4-fpm-alpine as stage1
 
 LABEL MAINTAINER Jen McQuade <info@indiewebconsulting.com>
 

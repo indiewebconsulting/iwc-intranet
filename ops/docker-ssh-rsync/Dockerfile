@@ -1,8 +1,8 @@
 # Creates a tiny SSH and rsync server
 # virtual size: 10.74 MB
 
-# From Alpine Linux 3.2 official repo
-FROM arm64v8/alpine:edge
+# From Alpine Linux official repo
+FROM alpine
 
 MAINTAINER Jen McQuade <info@indiewebconsulting.com>
 
