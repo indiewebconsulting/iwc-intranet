@@ -317,7 +317,7 @@ RUN \
   
 # Add NGINX config and static files.
 ADD conf/nginx.conf /etc/nginx/nginx.conf
-RUN mkdir -p /opt/data
+RUN mkdir -p /opt/data ; mkdir -p /var/www/html
 ADD app /var/www/html
 
 # Ensure we keep some folders open for sharing
