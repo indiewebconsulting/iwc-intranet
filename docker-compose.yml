@@ -1,53 +1,5 @@
 version: '3'
-services:
-  aeden:
-    env_file:
-      - ./.env
-    image: ${DOCKER_ACCT}/adaen:prfx-${CPU_TYPE}-v${IWC_INTRANET_VERSION}
-    build:
-      context: ./dns/docker-php-nginx
-    deploy:
-      mode: replicated
-      replicas: 4
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120x
-    container_name: rpoxy
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100M"
-    ports:
-      - ${HTTP_ACCESS_PORT}:80
-      - ${SSL_ACCESS_PORT}:443
-      - ${RTMP_P1}:1935
-      - ${SMB_TCP_PORT1}:139
-      - ${SMB_TCP_PORT2}:445
-      - ${SMB_UDP_PORT1}:137
-      - ${SMB_UDP_PORT2}:138
-      - ${PLEX_PORT}:32400
-      - ${HTTP_SECONDARY}:8080
-    volumes:
-      - ./sites:/var/www/html
-      - ./ops/certs:/etc/letsencrypt/live
-      - ./config/nginx/sites-available:/etc/nginx/sites-available
-      - ./config/nginx/sites-enabled:/etc/nginx/sites-enabled
-      - ./config/nginx/conf.d:/etc/nginx/conf.d
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./config:/intranet/config
-      - ./ops/logs:/var/log
-      - ./util:/intranet/util
-    networks:
-      - home
-      - ops
-    labels:
-      com.iwc.stack: "alpine, php, nginx, ffmpg, and rtmp services with support for xdebug, vnc and other passthrough ports"
-      com.iwc.description: "Reverse proxy handling of DNS entries"
-      com.iwc.type: "proxy"
-
+services:  
   dnsmasqd:
     env_file:
       - ./.env
@@ -124,7 +76,7 @@ services:
       com.iwc.stack: "alpine"
       com.iwc.description: "dnscrypt-proxy for encrypting dnsmasq traffic"
       com.iwc.type: "proxy"
- 
+
   rsync:
     env_file:
       - ./.env
