@@ -77,11 +77,51 @@ services:
       com.iwc.description: "dnscrypt-proxy for encrypting dnsmasq traffic"
       com.iwc.type: "proxy"
 
+  smbd:
+   env_file:
+     - ./.env
+   image: ${DOCKER_ACCT}/intranet_smbd:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
+   build:
+     context: ./storage/docker-samba
+   deploy:
+     mode: replicated
+     replicas: 2
+     restart_policy:
+       condition: on-failure
+       delay: 5s
+       max_attempts: 3
+       window: 120s
+   restart: unless-stopped
+   container_name: smbd
+   environment:
+      - CERTS_DIR=/etc/letsencrypt/live
+   volumes:
+     - ./storage/ftp:/media/samba/ftp
+     - ./storage/docker-samba/shares:/media/samba
+     - ./config/samba/smb.conf:/etc/samba/smb.conf
+     - ./config:/intranet/config
+     - ./ops/certs:/etc/letsencrypt/live
+     - ./ops/logs:/var/log
+     - ./util:/intranet/util
+   ports:
+     - "${SMB_UDP_PORT1}:137/udp"
+     - "${SMB_UDP_PORT2}:138/udp"
+     - "${SMB_TCP_PORT1}:139"
+     - "${SMB_TCP_PORT2}:445"
+   networks:
+     - home
+     - ops
+   labels:
+     com.iwc.stack: "alpine"
+     com.iwc.description: "Samba access to shared volumes"
+     com.iwc.type: "storage"
+
   rsync:
     env_file:
       - ./.env
     image: ${DOCKER_ACCT}/intranet_rsync:${CPU_TYPE}-v${IWC_INTRANET_VERSION}
     container_name: rsync
+    restart: unless-stopped
     build:
       context: ./storage/docker-rsync
     ports:
