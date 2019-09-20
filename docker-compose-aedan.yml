@@ -5,7 +5,7 @@ services:
       - ./.env
     image: ${DOCKER_ACCT}/aedan:prfx-${CPU_TYPE}-v${IWC_INTRANET_VERSION}
     build:
-      context: ./dns/docker-php-nginx
+      context: ./dns/aedan
     deploy:
       mode: replicated
       replicas: 4
