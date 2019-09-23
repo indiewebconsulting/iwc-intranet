@@ -1,9 +1,8 @@
 ## Local IWC pointers
-192.168.1.1   plex
-192.168.1.1   iwc
-192.168.1.1   iwc.net
-192.168.1.1   router
-192.168.1.1   linksys
+192.168.0.18  plex
+192.168.0.1   router
+192.168.0.18  stream
+192.168.0.24  domainctrl
 
 ## BLOCKED IP ADDRESSES
 

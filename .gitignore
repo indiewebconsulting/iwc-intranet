@@ -5,6 +5,9 @@ config/aws/*
 ops/data/*
 ops/logs/*
 ops/backups/*
+sites/dev/*
+sites/stg/*
+sites/prod/*
 storage/ftp/.ssh
 storage/public/*
 .ssh

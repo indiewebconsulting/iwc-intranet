@@ -1,0 +1,54 @@
+version: '3'
+services:
+  aedan:
+    env_file:
+      - ./.env
+    # image: ${DOCKER_ACCT}/aedan:prfx-AMD64-v${IWC_INTRANET_VERSION}
+    image: ${DOCKER_ACCT}/aedan:latest
+    build:
+      context: ./
+    deploy:
+      mode: replicated
+      replicas: 4
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120x
+    container_name: aedan
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+    environment:
+      - "CERT_DIR=${CERT_DIR}"
+      - "DOMAIN=stream.indiewebconsulting.com"
+      - "GIT_NAME=indiewebconsult"
+      - "GIT_EMAIL=info@indiewebconsulting.com"
+      - "WEBROOT=/var/www/html"
+      - "ERRORS=1"
+      - "HIDE_NGINX_HEADERS=0"
+      - "REAL_IP_HEADER=1"
+      - "PHP_ERRORS_STDERR=1"
+      - "PHP_MEM_LIMIT=256M"
+      - "PHP_POST_MAX_SIZE=50M"
+      - "PHP_UPLOAD_MAX_FILESIZE=100M"
+      - "ENABLE_XDEBUG=1"
+      - "RUN_SCRIPTS=0"
+    ports:
+      - ${HTTP_ACCESS_PORT}:80
+      - ${SSL_ACCESS_PORT}:443
+      - ${RTMP_P1}:1935
+      - ${HTTP_SECONDARY}:8080
+    volumes:
+      - ./src:/var/www/html
+      - ./scripts:/var/www/scripts
+      - ./certs:/etc/letsencrypt
+    labels:
+      com.iwc.stack: "alpine, php, nginx, ffmpg, and rtmp services with support for xdebug, vnc and other passthrough ports"
+      com.iwc.description: "AMD/ARM64 Encrypted Docker Alpine Reverse proxy handling of DNS entries and Media Streaming"
+      com.iwc.type: "proxy"
+
+
+

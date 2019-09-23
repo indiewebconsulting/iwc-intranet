@@ -1,11 +1,11 @@
 version: '3'
 services:
-  aeden:
+  aedan:
     env_file:
       - ./.env
-    image: ${DOCKER_ACCT}/aedan:prfx-${CPU_TYPE}-v${IWC_INTRANET_VERSION}
+    image: ${DOCKER_ACCT}/aedan
     build:
-      context: ./dns/docker-php-nginx
+      context: ./dns/aedan
     deploy:
       mode: replicated
       replicas: 4
@@ -15,6 +15,7 @@ services:
         max_attempts: 3
         window: 120x
     container_name: aedan
+    network_mode: host
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -25,32 +26,58 @@ services:
       - "NGINX_VERSION=${NGINX_VERSION}"
       - "FFMPEG_VERSION=${FFMPEG_VERSION}"
       - "CFLAGS=${CFLAGS}"
+      - "DOMAIN=www.indiewebconsulting.com"
+      - "GIT_NAME=indiewebconsult"
+      - "GIT_EMAIL=info@indiewebconsulting.com"
+      - "WEBROOT=/var/www/html"
+      - "ERRORS=1"
+      - "HIDE_NGINX_HEADERS=0"
+      - "REAL_IP_HEADER=1"
+      - "PHP_ERRORS_STDERR=1"
+      - "PHP_MEM_LIMIT=256M"
+      - "PHP_POST_MAX_SIZE=50M"
+      - "PHP_UPLOAD_MAX_FILESIZE=100M"
+      - "ENABLE_XDEBUG=1"
+      - "RUN_SCRIPTS=0"
+
     ports:
       - ${HTTP_ACCESS_PORT}:80
       - ${SSL_ACCESS_PORT}:443
       - ${RTMP_P1}:1935
       - ${PLEX_PORT}:32400
       - ${HTTP_SECONDARY}:8080
+    
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    
     volumes:
       - ./sites:/var/www/html
-      - ./ops/certs:/etc/letsencrypt/live
+      - ./sites/certbot:/var/www/certbot
+      - ./ops/certs:/etc/letsencrypt
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
       - ./config/nginx/sites-available:/etc/nginx/sites-available
       - ./config/nginx/sites-enabled:/etc/nginx/sites-enabled
-      - ./config/nginx/conf.d:/etc/nginx/conf.d
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/stat.xsl:/etc/nginx/stat.xsl
+      - ./config/nginx/reset.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/aedan.conf:/etc/nginx/aedan.conf
       - ./config:/intranet/config
       - ./ops/logs:/var/log
       - ./util:/intranet/util
-    networks:
-      - home
-      - ops
     labels:
       com.iwc.stack: "alpine, php, nginx, ffmpg, and rtmp services with support for xdebug, vnc and other passthrough ports"
       com.iwc.description: "Reverse proxy handling of DNS entries"
       com.iwc.type: "proxy"
 
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    container_name: certbot
+    volumes:
+      - ./ops/certs:/etc/letsencrypt
+      - ./sites/certbot:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
 networks:
   ops:
     driver: bridge
-  home:
+  proxy:
     driver: bridge

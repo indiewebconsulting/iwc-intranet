@@ -4,11 +4,16 @@ address=/pornhub.com/0.0.0.0
 address=/brazzers.com/0.0.0.0
 
 ### Locals
+address=/indiewebconsulting.com/127.0.0.1
+address=/dev.indiewebconsulting.com/127.0.0.1
+address=/www.indiewebconsulting.com/127.0.0.1
+address=/stream.indiewebconsulting.com/127.0.0.1
+address=/windowsdeadpoolthreepoint1.com/127.0.0.1
+address=/www.windowsdeadpoolthreepoint1.com/127.0.0.1
 address=/plex/127.0.0.1
-address=/iwc/192.168.1.1
-address=/router/192.168.1.1
+address=/iwc/127.0.0.1
+address=/router/192.168.0.1
 address=/iwc.net/127.0.0.1
 address=/domainctrl/127.0.0.1
-address=/stream/192.168.1.143
-address=/winfileserver/192.168.1.109
+address=/stream/192.168.0.18
 address=/dns/127.0.0.1

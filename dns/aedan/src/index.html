@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="favicon.ico">
+
+  <!-- Bootstrap core CSS. This is just to make the demo look
+    nice. It's not required for videojs-contrib-dash to work. -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Some custom styles for the demo page -->
+  <style>
+    body {
+      color: #868688;
+      background-color: #FAFCFF;
+      overflow-x: hidden;
+    }
+
+    .container {
+        width: 100vw;
+        height: 100vw;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    nav {
+      background-color: #e7e7e7
+    }
+
+    nav a {
+      color: #868688;
+    }
+
+    nav a:hover {
+      color: #606062;
+      text-decoration: none;
+    }
+
+    .navbar-toggle .icon-bar {
+      background-color: #868688;
+    }
+
+    .starter-template {
+      text-align: center;
+    }
+
+    .video-js {
+      margin: 0 auto;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+
+<body>
+
+  <div class="container">
+
+    <section class="starter-template">
+      <!--
+          -- Your video element. Just like regular HTML5 video.
+          -->
+      <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls>
+        </video>
+
+      <form id=load-url>
+        <label> Video URL: <input id=url type=url value="dash/index.mpd"> </label> <br>
+        <button type=submit>Load</button>
+      </form>
+    </section>
+
+  </div>
+  <!-- /.container -->
+
+
+  <!-- Bootstrap stuff. These three scripts aren't necessary for you
+         to use videojs-contrib-dash -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <!--------------------------------------------------------------------------
+      --                      videojs-contrib-dash setup                       --
+      ------------------------------------------------------------------------!>
+
+    <!--
+      -- Make sure to include the video.js CSS. This could go in
+      -- the <head>, too.
+      -->
+  <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+
+  <!--
+      -- Include video.js, dash.js, and
+      -- videojs-contrib-dash in your page
+      -->
+  <script src="https://unpkg.com/video.js/dist/video.js"></script>
+  <script src="//cdn.dashjs.org/latest/dash.all.debug.js"></script>
+  <script src="https://unpkg.com/videojs-contrib-dash/dist/videojs-dash.js"></script>
+
+  <!--
+      -- Now, initialize your player. That's it!
+      -->
+  <script>
+    (function(videojs) {
+      var player = window.player = videojs('example-video');
+      var url = document.getElementById('url');
+
+      // hook up the video switcher
+      var loadUrl = document.getElementById('load-url');
+      loadUrl.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var src = {
+          src: url.value,
+          type: 'application/dash+xml'
+        };
+
+        player.src(src);
+
+        return false;
+      });
+
+      player.src({
+          src: url.value,
+          type: 'application/dash+xml'
+        });
+    })(window.videojs);
+  </script>
+</body>
+
+</html>
